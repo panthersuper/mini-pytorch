@@ -98,7 +98,7 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=1000):
         self.inplanes = 64
         super(ResNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=1, padding=3,
                                bias=False)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
@@ -108,8 +108,10 @@ class ResNet(nn.Module):
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AvgPool2d(14)
-        self.drop = nn.Dropout2d(p=0.2) #pwz
-        self.fc = nn.Linear(512 * block.expansion, num_classes)
+        #self.drop = nn.Dropout2d(p=0.5) #pwz
+        self.fc1 = nn.Linear(512 * block.expansion, 512 * block.expansion)
+        self.drop = nn.Dropout() #pwz
+        self.fc2 = nn.Linear(512 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -148,9 +150,11 @@ class ResNet(nn.Module):
         x = self.layer4(x)
 
         x = self.avgpool(x)
-        x = self.drop(x) #pwz
+        # x = self.drop(x) #pwz
         x = x.view(x.size(0), -1)
-        x = self.fc(x)
+        x = self.fc1(x)
+        x = self.drop(x) #pwz
+        x = self.fc2(x) #pwz
 
         return x
 

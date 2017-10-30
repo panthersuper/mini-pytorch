@@ -1,9 +1,9 @@
 from DataAugmentation import DataAugmentation
 
 aug_params = {
-	'data_root': './data/images/',
-    'data_list': './data/train.txt',
-    'data_aug_list': './data/aug_train.txt',
+	'data_root': '../../../data/images/',
+    'data_list': '../../../data/train.txt',
+    'data_aug_list': '../../../data/aug_train.txt',
     'img_dimension': 128,
     'max_rotate_angle': 10,
     'rotate_zero_padding': False,
