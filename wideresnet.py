@@ -109,9 +109,9 @@ class ResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         self.avgpool = nn.AvgPool2d(14)
         #self.drop = nn.Dropout2d(p=0.5) #pwz
-        self.fc1 = nn.Linear(512 * block.expansion, 512 * block.expansion)
+        self.fc1 = nn.Linear(512 * block.expansion, 256 * block.expansion)
         self.drop = nn.Dropout() #pwz
-        self.fc2 = nn.Linear(512 * block.expansion, num_classes)
+        self.fc2 = nn.Linear(256 * block.expansion, num_classes)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):

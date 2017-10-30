@@ -31,7 +31,7 @@ from torch.autograd import Variable
 import math
 
 # Dataset Parameters
-batch_size = 80
+batch_size = 70
 load_size = 128
 fine_size = 112
 c = 3
