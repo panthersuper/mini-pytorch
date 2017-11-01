@@ -49,15 +49,15 @@ parser.add_argument('--epochs', default=40, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
-parser.add_argument('--lr', '--learning-rate', default=0.001, type=float,
+parser.add_argument('--lr', '--learning-rate', default=0.0003, type=float,
                     metavar='LR', help='initial learning rate')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
-parser.add_argument('--weight_decay', '--wd', default=1e-3, type=float,
+parser.add_argument('--weight_decay', '--wd', default=5e-3, type=float,
                     metavar='W', help='weight decay (default: 1e-4)')
 parser.add_argument('--print-freq', '-p', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
-parser.add_argument('--resume', default='', type=str, metavar='PATH',
+parser.add_argument('--resume', default='resnet18/wideresnet_best.pth.tar', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
                     help='evaluate model on validation set')
@@ -89,6 +89,7 @@ def main():
     # optionally resume from a checkpoint
     if args.resume:
         if os.path.isfile(args.resume):
+
             print("=> loading checkpoint '{}'".format(args.resume))
             checkpoint = torch.load(args.resume)
             args.start_epoch = checkpoint['epoch']
@@ -107,7 +108,7 @@ def main():
     opt_data_train = {
         #'data_h5': 'miniplaces_256_train.h5',
         'data_root': '../../data/images/',   # MODIFY PATH ACCORDINGLY
-        'data_list': '../../data/aug_train.txt', # MODIFY PATH ACCORDINGLY
+        'data_list': '../../data/aug_train2.txt', # MODIFY PATH ACCORDINGLY
         'load_size': load_size,
         'fine_size': fine_size,
         'data_mean': data_mean,

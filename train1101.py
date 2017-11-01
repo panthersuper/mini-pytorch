@@ -18,7 +18,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
-import wideresnet
+import resnetPWZ as wideresnet
 import pdb
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -31,7 +31,7 @@ from torch.autograd import Variable
 import math
 
 # Dataset Parameters
-batch_size = 70
+batch_size = 30
 load_size = 128
 fine_size = 112
 c = 3
@@ -68,6 +68,13 @@ parser.add_argument('--dataset',default='places365',help='which dataset to train
 
 best_prec1 = 0
 
+def weight_init(n):
+    classname = n.__class__.__name__
+    if classname.find("Conv") != -1:
+        nn.init.kaiming_uniform(n.weight.data)
+        print("kaiming init")
+
+
 def main():
     global args, best_prec1
     args = parser.parse_args()
@@ -76,7 +83,7 @@ def main():
     print("=> creating model '{}'".format(args.arch))
     if args.arch.lower().startswith('wideresnet'):
         # a customized resnet model with last feature map size as 14x14 for better class activation mapping
-        model  = wideresnet.resnet18(num_classes=args.num_classes)
+        model  = wideresnet.resnet50(num_classes=args.num_classes)
     else:
         model = models.__dict__[args.arch](num_classes=args.num_classes)
 
@@ -85,10 +92,12 @@ def main():
         model.cuda()
     else:
         model = torch.nn.DataParallel(model).cuda()
+    model.apply(weight_init) ###init
     print(model)
     # optionally resume from a checkpoint
     if args.resume:
         if os.path.isfile(args.resume):
+
             print("=> loading checkpoint '{}'".format(args.resume))
             checkpoint = torch.load(args.resume)
             args.start_epoch = checkpoint['epoch']
@@ -107,7 +116,7 @@ def main():
     opt_data_train = {
         #'data_h5': 'miniplaces_256_train.h5',
         'data_root': '../../data/images/',   # MODIFY PATH ACCORDINGLY
-        'data_list': '../../data/aug_train.txt', # MODIFY PATH ACCORDINGLY
+        'data_list': '../../data/aug_train2.txt', # MODIFY PATH ACCORDINGLY
         'load_size': load_size,
         'fine_size': fine_size,
         'data_mean': data_mean,
